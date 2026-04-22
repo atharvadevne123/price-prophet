@@ -1,13 +1,13 @@
 import numpy as np
 
+from app.features import generate_synthetic_training_data
 from app.monitoring import (
     compute_drift,
     compute_feature_drift,
+    load_reference_stats,
     prediction_health_check,
     save_reference_stats,
-    load_reference_stats,
 )
-from app.features import generate_synthetic_training_data
 
 
 def test_compute_drift_no_drift():

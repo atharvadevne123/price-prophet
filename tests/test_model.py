@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from app.features import generate_synthetic_training_data, FEATURE_NAMES
-from app.model import build_pipeline, predict, optimize_price, train_model
+from app.features import FEATURE_NAMES, generate_synthetic_training_data
+from app.model import build_pipeline, optimize_price, predict, train_model
 
 
 @pytest.fixture(scope="module")

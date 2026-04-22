@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 
 try:
     from airflow import DAG
-    from airflow.operators.python import PythonOperator
     from airflow.operators.bash import BashOperator
+    from airflow.operators.python import PythonOperator
     HAS_AIRFLOW = True
 except ImportError:
     HAS_AIRFLOW = False

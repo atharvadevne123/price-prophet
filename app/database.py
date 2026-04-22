@@ -1,7 +1,8 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, JSON
-from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
+
+from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./price_prophet.db")
 

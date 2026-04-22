@@ -1,13 +1,18 @@
-import os
 import json
-import uuid
 import logging
-import numpy as np
+import os
+import uuid
+
 import joblib
+import numpy as np
+from sklearn.ensemble import (
+    GradientBoostingRegressor,
+    RandomForestRegressor,
+    VotingRegressor,
+)
+from sklearn.model_selection import KFold, cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, VotingRegressor
-from sklearn.model_selection import cross_val_score, KFold
 
 try:
     from xgboost import XGBRegressor

@@ -92,7 +92,7 @@ def get_index() -> ProductIndex:
 
 
 def _seed_index() -> None:
-    from app.features import generate_synthetic_training_data, CATEGORY_MAP
+    from app.features import CATEGORY_MAP, generate_synthetic_training_data
     X, y = generate_synthetic_training_data(n_samples=500)
     categories = list(CATEGORY_MAP.keys())
     np.random.seed(99)
