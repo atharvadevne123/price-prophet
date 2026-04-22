@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.db
+model.joblib
+metrics.json
+reference_stats.json
+faiss_index.pkl
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
