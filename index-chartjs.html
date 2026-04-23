@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Price-Prophet — Pricing Intelligence</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="logo">
+    <span class="logo-icon">◈</span>
+    <span class="logo-text">Price<span class="accent">Prophet</span></span>
+  </div>
+  <nav class="nav">
+    <a href="#" class="nav-item active">
+      <span class="nav-icon">⬡</span> Dashboard
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⟳</span> Optimizer
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⌘</span> Demand Model
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⊞</span> Competitors
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">↗</span> Scenarios
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">◷</span> History
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙</span> Settings
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="model-badge">ML Model: v2.4.1</div>
+    <div class="status-dot active">Live</div>
+  </div>
+</aside>
+
+<!-- Main content -->
+<main class="main">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title">Pricing Dashboard</h1>
+      <span class="breadcrumb">Overview · Q2 2026</span>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <span>⌕</span>
+        <input type="text" placeholder="Search products…" />
+      </div>
+      <div class="date-range">Apr 1 – Apr 22, 2026</div>
+      <button class="btn-primary">Run Optimizer</button>
+      <div class="avatar">AD</div>
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <section class="kpis">
+    <div class="kpi-card">
+      <div class="kpi-label">Optimal Price</div>
+      <div class="kpi-value">$142.50</div>
+      <div class="kpi-delta positive">+3.2% vs current</div>
+      <div class="kpi-sparkline"><canvas id="spark1"></canvas></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Revenue Forecast (30d)</div>
+      <div class="kpi-value">$2.84M</div>
+      <div class="kpi-delta positive">+11.4% MoM</div>
+      <div class="kpi-sparkline"><canvas id="spark2"></canvas></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Demand Index</div>
+      <div class="kpi-value">78.3</div>
+      <div class="kpi-delta negative">-2.1 pts WoW</div>
+      <div class="kpi-sparkline"><canvas id="spark3"></canvas></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Price Elasticity</div>
+      <div class="kpi-value">−1.42</div>
+      <div class="kpi-delta neutral">Elastic demand</div>
+      <div class="kpi-sparkline"><canvas id="spark4"></canvas></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Margin Impact</div>
+      <div class="kpi-value">+4.7%</div>
+      <div class="kpi-delta positive">From last reopt.</div>
+      <div class="kpi-sparkline"><canvas id="spark5"></canvas></div>
+    </div>
+  </section>
+
+  <!-- Charts Row 1 -->
+  <section class="charts-row">
+    <!-- Demand vs Price -->
+    <div class="chart-card large">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Demand vs. Price</h3>
+          <span class="chart-sub">Historical demand curve with optimal range</span>
+        </div>
+        <div class="chart-controls">
+          <button class="tab active">7D</button>
+          <button class="tab">30D</button>
+          <button class="tab">90D</button>
+        </div>
+      </div>
+      <canvas id="demandChart"></canvas>
+    </div>
+
+    <!-- Revenue Optimization -->
+    <div class="chart-card medium">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Revenue Optimization</h3>
+          <span class="chart-sub">Actual vs forecasted revenue</span>
+        </div>
+      </div>
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </section>
+
+  <!-- Charts Row 2 -->
+  <section class="charts-row">
+    <!-- Elasticity Heatmap -->
+    <div class="chart-card medium">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Price Elasticity by Segment</h3>
+          <span class="chart-sub">Sensitivity across customer segments</span>
+        </div>
+      </div>
+      <canvas id="elasticityChart"></canvas>
+    </div>
+
+    <!-- Competitor Prices -->
+    <div class="chart-card medium">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Competitor Price Benchmark</h3>
+          <span class="chart-sub">Last 14 days</span>
+        </div>
+      </div>
+      <canvas id="competitorChart"></canvas>
+    </div>
+
+    <!-- Scenario Analysis -->
+    <div class="chart-card small">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Scenario Analysis</h3>
+          <span class="chart-sub">Revenue impact by price change</span>
+        </div>
+      </div>
+      <canvas id="scenarioChart"></canvas>
+    </div>
+  </section>
+
+  <!-- Pricing Recommendations Table -->
+  <section class="table-section">
+    <div class="table-header">
+      <h3 class="chart-title">Active Pricing Recommendations</h3>
+      <div class="table-actions">
+        <button class="btn-ghost">Export CSV</button>
+        <button class="btn-primary btn-sm">Apply All</button>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Current Price</th>
+          <th>Optimal Price</th>
+          <th>Δ Price</th>
+          <th>Revenue Impact</th>
+          <th>Confidence</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="recoTableBody"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

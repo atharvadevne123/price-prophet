@@ -4,6 +4,28 @@
 
 [![CI](https://github.com/atharvadevne123/price-prophet/actions/workflows/ci.yml/badge.svg)](https://github.com/atharvadevne123/price-prophet/actions/workflows/ci.yml)
 
+## Dashboard UI
+
+![Dashboard](screenshots/dashboard.png)
+
+A fully interactive pricing intelligence dashboard — built with Google Stitch (Gemini 3.1 Pro) and Tailwind CSS.
+
+**Features:** Optimal price KPI · Revenue forecast · Demand index · Price elasticity · Competitor benchmark · Scenario analysis · Pricing recommendations table
+
+```bash
+# Open the dashboard locally
+open index.html
+
+# Or serve it
+python3 -m http.server 8080
+```
+
+> `index.html` — Stitch-generated UI &nbsp;|&nbsp; `index-chartjs.html` — Chart.js version
+
+---
+
+## Architecture
+
 ![Architecture](screenshots/architecture.png)
 
 ## What It Does

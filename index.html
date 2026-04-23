@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Price Prophet Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#1e1f25",
+                    "secondary": "#c0c1ff",
+                    "secondary-container": "#42447b",
+                    "on-error-container": "#ffdad6",
+                    "outline": "#908fa0",
+                    "surface-container-high": "#282a2f",
+                    "tertiary": "#ffb783",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#d97721",
+                    "on-primary-fixed": "#07006c",
+                    "on-primary": "#1000a9",
+                    "primary-fixed": "#e1e0ff",
+                    "on-background": "#e2e2e9",
+                    "outline-variant": "#464554",
+                    "surface-tint": "#c0c1ff",
+                    "primary": "#c0c1ff",
+                    "on-tertiary-fixed": "#301400",
+                    "surface": "#111318",
+                    "on-secondary-fixed-variant": "#404178",
+                    "tertiary-fixed": "#ffdcc5",
+                    "on-primary-container": "#0d0096",
+                    "on-secondary": "#292a60",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "secondary-fixed": "#e1e0ff",
+                    "background": "#111318",
+                    "on-tertiary": "#4f2500",
+                    "surface-variant": "#33353a",
+                    "surface-container-highest": "#33353a",
+                    "surface-dim": "#111318",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "on-secondary-container": "#b2b3f2",
+                    "error-container": "#93000a",
+                    "primary-container": "#8083ff",
+                    "inverse-primary": "#494bd6",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "surface-container-low": "#1a1b21",
+                    "surface-container-lowest": "#0c0e13",
+                    "secondary-fixed-dim": "#c0c1ff",
+                    "on-error": "#690005",
+                    "inverse-on-surface": "#2e3036",
+                    "surface-bright": "#37393f",
+                    "on-secondary-fixed": "#13144a",
+                    "on-tertiary-container": "#452000",
+                    "on-tertiary-fixed-variant": "#703700",
+                    "on-surface": "#e2e2e9",
+                    "on-surface-variant": "#c7c4d7",
+                    "inverse-surface": "#e2e2e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 flex flex-col fixed left-0 top-0 bg-[#111318] dark:bg-[#111318] z-50 shadow-[4px_0_24px_rgba(0,0,0,0.5)] border-r border-surface-container-low">
+<div class="flex flex-col h-full py-8 px-4">
+<!-- Header/Brand -->
+<div class="mb-10 px-2 flex flex-col gap-1">
+<div class="text-xl font-black tracking-tighter text-[#6366f1] lowercase">price-prophet</div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">pricing intelligence</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#c0c1ff] bg-[#1e1f25] border-r-2 border-[#6366f1] font-['Inter'] tracking-wider uppercase text-[10px] font-bold transition-all duration-300 scale-95 active:scale-90 shadow-[0_0_15px_rgba(99,102,241,0.15)]" href="#">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+<span>Intelligence</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[18px]">insights</span>
+<span>Strategy</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[18px]">monitoring</span>
+<span>Competitors</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[18px]">query_stats</span>
+<span>Elasticity</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[18px]">pie_chart</span>
+<span>Segments</span>
+</a>
+</div>
+<!-- Footer Navigation -->
+<div class="mt-auto pt-6 border-t border-surface-container-low flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-500 hover:text-slate-300 hover:bg-[#1e1f25] transition-all duration-300 font-['Inter'] tracking-wider uppercase text-[10px] font-bold" href="#">
+<span class="material-symbols-outlined text-[16px]">help</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#111318]/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.3)] border-none">
+<div class="flex justify-between items-center px-12 h-20">
+<!-- Leading -->
+<div class="flex items-center gap-4 text-[#6366f1]">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<h1 class="font-['Inter'] headline-sm lowercase tracking-widest text-lg font-bold">Pricing Dashboard</h1>
+</div>
+<!-- Navigation Links (Centered-ish) -->
+<div class="hidden lg:flex items-center gap-8">
+<a class="text-[#6366f1] border-b-2 border-[#6366f1] pb-1 text-sm font-semibold tracking-wide hover:text-white transition-colors focus:ring-2 focus:ring-[#6366f1]/20 outline-none" href="#">Q3 Forecast</a>
+<a class="text-slate-400 text-sm font-semibold tracking-wide hover:text-white transition-colors focus:ring-2 focus:ring-[#6366f1]/20 outline-none" href="#">Market Pulse</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center gap-2 text-on-surface-variant bg-surface-container-low px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Oct 01 - Oct 31</span>
+</div>
+<div class="flex items-center gap-3 text-slate-400">
+<button class="hover:text-white transition-colors focus:ring-2 focus:ring-[#6366f1]/20 rounded-full p-1 outline-none">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-white transition-colors focus:ring-2 focus:ring-[#6366f1]/20 rounded-full p-1 outline-none">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide shadow-[0_4px_14px_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                    Run Optimizer
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-28 px-10 pb-20">
+<!-- Row 1: KPI Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-10">
+<!-- KPI 1 -->
+<div class="bg-surface-container-low rounded-[1rem] p-6 flex flex-col justify-between border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start mb-4 z-10">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Optimal Price</span>
+<span class="material-symbols-outlined text-primary text-[20px]">sell</span>
+</div>
+<div class="z-10">
+<div class="text-4xl font-light tracking-tight text-white mb-2">$142.50</div>
+<div class="inline-flex items-center gap-1 bg-surface-container/50 px-2 py-0.5 rounded text-xs font-medium text-[#c0c1ff]">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>+3.2%</span>
+</div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-low rounded-[1rem] p-6 flex flex-col justify-between border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start mb-4 z-10">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Revenue Forecast</span>
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance_wallet</span>
+</div>
+<div class="z-10">
+<div class="text-4xl font-light tracking-tight text-white mb-2">$2.84M</div>
+<div class="inline-flex items-center gap-1 bg-surface-container/50 px-2 py-0.5 rounded text-xs font-medium text-[#c0c1ff]">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>+11.4%</span>
+</div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-low rounded-[1rem] p-6 flex flex-col justify-between border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-error/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start mb-4 z-10">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Demand Index</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">bar_chart</span>
+</div>
+<div class="z-10">
+<div class="text-4xl font-light tracking-tight text-white mb-2">78.3</div>
+<div class="inline-flex items-center gap-1 bg-error/10 px-2 py-0.5 rounded text-xs font-medium text-error">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+<span>-2.1</span>
+</div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-low rounded-[1rem] p-6 flex flex-col justify-between border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start mb-4 z-10">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Price Elasticity</span>
+<span class="material-symbols-outlined text-tertiary text-[20px]">compress</span>
+</div>
+<div class="z-10">
+<div class="text-4xl font-light tracking-tight text-white mb-2">-1.42</div>
+<div class="inline-flex items-center gap-1 bg-tertiary/10 px-2 py-0.5 rounded text-xs font-medium text-tertiary">
+<span>Elastic</span>
+</div>
+</div>
+</div>
+<!-- KPI 5 -->
+<div class="bg-surface-container-low rounded-[1rem] p-6 flex flex-col justify-between border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] relative overflow-hidden group xl:col-span-1 md:col-span-2">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start mb-4 z-10">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Margin Impact</span>
+<span class="material-symbols-outlined text-primary text-[20px]">show_chart</span>
+</div>
+<div class="z-10">
+<div class="text-4xl font-light tracking-tight text-white mb-2">+4.7%</div>
+<div class="inline-flex items-center gap-1 bg-surface-container/50 px-2 py-0.5 rounded text-xs font-medium text-[#c0c1ff]">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span>Optimization</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 2: Main Charts -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
+<!-- Chart 1: Demand vs Price -->
+<div class="bg-surface-container-low rounded-[1.25rem] p-8 border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-lg font-bold text-white tracking-wide">Demand vs. Price</h3>
+<p class="text-xs text-on-surface-variant mt-1 tracking-wider uppercase font-medium">Dual-Axis Historical Analysis</p>
+</div>
+<button class="text-on-surface-variant hover:text-white transition-colors bg-surface-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="flex-1 relative w-full h-full bg-surface-container-lowest/50 rounded-lg overflow-hidden flex items-end pt-8 px-4 border border-outline-variant/10">
+<!-- Abstract Chart Representation -->
+<div class="absolute inset-0 flex flex-col justify-between py-6 px-4 pointer-events-none opacity-20">
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+</div>
+<!-- Line 1: Demand (Primary color) -->
+<svg class="absolute inset-0 w-full h-full preserve-3d" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="drop-shadow-[0_4px_8px_rgba(192,193,255,0.4)]" d="M0,80 Q20,60 40,70 T60,40 T80,50 T100,20" fill="none" stroke="#c0c1ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<!-- Line 2: Price Points (Tertiary color) -->
+<svg class="absolute inset-0 w-full h-full preserve-3d" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,30 Q20,40 40,35 T60,60 T80,55 T100,80" fill="none" stroke="#ffb783" stroke-dasharray="4 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<div class="w-full flex justify-between text-[10px] text-on-surface-variant mt-auto pb-2 font-mono">
+<span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span>
+</div>
+</div>
+<div class="flex gap-6 mt-4 justify-center">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+<div class="w-3 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(192,193,255,0.6)]"></div> Demand Units
+                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+<div class="w-3 h-0.5 bg-tertiary rounded-full border border-tertiary border-dashed"></div> Price Points
+                    </div>
+</div>
+</div>
+<!-- Chart 2: Revenue Actual vs Forecast -->
+<div class="bg-surface-container-low rounded-[1.25rem] p-8 border border-white/[0.02] shadow-[0_8px_30px_rgba(0,0,0,0.12)] flex flex-col h-[400px]">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-lg font-bold text-white tracking-wide">Revenue: Actual vs. Forecast</h3>
+<p class="text-xs text-on-surface-variant mt-1 tracking-wider uppercase font-medium">Q3 Target Tracking</p>
+</div>
+<button class="text-on-surface-variant hover:text-white transition-colors bg-surface-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<div class="flex-1 w-full flex items-end gap-2 sm:gap-6 px-4 bg-surface-container-lowest/50 rounded-lg pt-8 border border-outline-variant/10 relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-6 px-4 pointer-events-none opacity-20 z-0">
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+<div class="w-full border-t border-white/20"></div>
+</div>
+<!-- Bar Groups -->
+<div class="flex-1 flex justify-center items-end gap-1 sm:gap-2 z-10 h-full pb-6">
+<div class="w-1/2 bg-surface-container-high h-[60%] rounded-t-sm border border-outline-variant/20 transition-all hover:bg-surface-variant"></div>
+<div class="w-1/2 bg-gradient-to-t from-primary-container to-primary h-[55%] rounded-t-sm shadow-[0_0_15px_rgba(192,193,255,0.2)] transition-all hover:brightness-110"></div>
+</div>
+<div class="flex-1 flex justify-center items-end gap-1 sm:gap-2 z-10 h-full pb-6">
+<div class="w-1/2 bg-surface-container-high h-[75%] rounded-t-sm border border-outline-variant/20 transition-all hover:bg-surface-variant"></div>
+<div class="w-1/2 bg-gradient-to-t from-primary-container to-primary h-[82%] rounded-t-sm shadow-[0_0_15px_rgba(192,193,255,0.2)] transition-all hover:brightness-110"></div>
+</div>
+<div class="flex-1 flex justify-center items-end gap-1 sm:gap-2 z-10 h-full pb-6">
+<div class="w-1/2 bg-surface-container-high h-[90%] rounded-t-sm border border-outline-variant/20 transition-all hover:bg-surface-variant"></div>
+<div class="w-1/2 bg-gradient-to-t from-primary-container to-primary h-[85%] rounded-t-sm shadow-[0_0_15px_rgba(192,193,255,0.2)] transition-all hover:brightness-110"></div>
+</div>
+<div class="flex-1 flex justify-center items-end gap-1 sm:gap-2 z-10 h-full pb-6">
+<div class="w-1/2 bg-surface-container-high h-[40%] rounded-t-sm border border-outline-variant/20 transition-all hover:bg-surface-variant"></div>
+<div class="w-1/2 bg-gradient-to-t from-primary-container to-primary h-[48%] rounded-t-sm shadow-[0_0_15px_rgba(192,193,255,0.2)] transition-all hover:brightness-110"></div>
+</div>
+</div>
+<div class="flex gap-6 mt-4 justify-center">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+<div class="w-3 h-3 bg-surface-container-high border border-outline-variant/20 rounded-sm"></div> Actual
+                    </div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+<div class="w-3 h-3 bg-primary rounded-sm shadow-[0_0_8px_rgba(192,193,255,0.6)]"></div> Forecast
+                    </div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
