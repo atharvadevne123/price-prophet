@@ -48,7 +48,9 @@ The ML core uses a **VotingRegressor ensemble** (XGBoost + LightGBM + RandomFore
 | `GET`  | `/drift` | KS-test drift analysis |
 | `POST` | `/similar` | FAISS-based similar products |
 | `GET`  | `/metrics` | Model metrics + prediction health |
-| `GET`  | `/predictions` | Recent prediction history |
+| `GET`  | `/predictions` | Recent prediction history (limit 1–200) |
+| `GET`  | `/categories` | List available product categories |
+| `GET`  | `/summary` | Aggregated stats: totals, avg demand, RMSE, drift events |
 
 ## Quick Start
 
@@ -150,15 +152,17 @@ Price Optimizer (grid search over 20 price points)
 ## Testing
 
 ```bash
-pip install pytest httpx
-pytest tests/ -v
+pip install pytest httpx pytest-cov
+pytest tests/ -v --cov=app --cov-report=term-missing
 ```
 
-Test coverage:
-- `test_api.py` — 10 API endpoint tests
+37 tests across 4 modules:
+- `test_api.py` — 15 API endpoint tests (health, forecast, train, drift, similar, categories, summary, limit validation)
 - `test_features.py` — 9 feature engineering tests
-- `test_model.py` — 7 model training/prediction tests
+- `test_model.py` — 6 model training/prediction/optimization tests
 - `test_monitoring.py` — 7 drift detection tests
+
+CI runs lint (ruff) → tests → coverage upload on every push to `main`/`dev`.
 
 ## Automated Retraining (Airflow)
 
@@ -188,4 +192,4 @@ Key variables:
 - **Database**: SQLAlchemy + SQLite (dev) / PostgreSQL (prod)
 - **Orchestration**: Apache Airflow DAG
 - **Infra**: Docker + docker-compose
-- **CI**: GitHub Actions (ruff lint + pytest)
+- **CI**: GitHub Actions (ruff lint + pytest + coverage report)

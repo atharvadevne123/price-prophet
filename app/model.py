@@ -108,7 +108,9 @@ def optimize_price(
     n_steps: int = 20,
 ) -> dict:
     best_price_mult = 1.0
-    best_revenue = -1.0
+    best_revenue = float("-inf")
+    best_demand = 0.0
+    best_new_price = float(base_features[0])
 
     for mult in np.linspace(price_range[0], price_range[1], n_steps):
         features = base_features.copy()

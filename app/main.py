@@ -1,14 +1,19 @@
 import logging
+from collections import deque
 from contextlib import asynccontextmanager
-from typing import List, Optional
+from typing import Deque, Optional
 
 import numpy as np
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.database import DriftLog, ModelMetrics, Prediction, get_db, init_db
-from app.features import engineer_features, generate_synthetic_training_data
+from app.features import (
+    CATEGORY_MAP,
+    engineer_features,
+    generate_synthetic_training_data,
+)
 from app.model import load_metrics, load_model, optimize_price, predict, train_model
 from app.monitoring import (
     compute_feature_drift,
@@ -22,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 _model = None
 _reference_X: Optional[np.ndarray] = None
-_recent_X: List[np.ndarray] = []
+_recent_X: Deque[np.ndarray] = deque(maxlen=1000)
 
 
 @asynccontextmanager
@@ -48,16 +53,16 @@ app = FastAPI(
 
 
 class ForecastRequest(BaseModel):
-    product_id: str = Field(..., example="PROD-001")
-    base_price: float = Field(..., gt=0, example=99.99)
-    competitor_price: Optional[float] = Field(None, example=105.0)
-    category: str = Field("other", example="electronics")
-    stock_level: Optional[float] = Field(100, example=150)
-    cost: Optional[float] = Field(None, example=60.0)
-    date: Optional[str] = Field(None, example="2024-12-15")
-    historical_demand_7d: Optional[float] = Field(50, example=75)
-    historical_demand_30d: Optional[float] = Field(200, example=280)
-    days_since_last_promotion: Optional[float] = Field(30, example=14)
+    product_id: str = Field(..., json_schema_extra={"example": "PROD-001"})
+    base_price: float = Field(..., gt=0, json_schema_extra={"example": 99.99})
+    competitor_price: Optional[float] = Field(None, json_schema_extra={"example": 105.0})
+    category: str = Field("other", json_schema_extra={"example": "electronics"})
+    stock_level: Optional[float] = Field(100, json_schema_extra={"example": 150})
+    cost: Optional[float] = Field(None, json_schema_extra={"example": 60.0})
+    date: Optional[str] = Field(None, json_schema_extra={"example": "2024-12-15"})
+    historical_demand_7d: Optional[float] = Field(50, json_schema_extra={"example": 75})
+    historical_demand_30d: Optional[float] = Field(200, json_schema_extra={"example": 280})
+    days_since_last_promotion: Optional[float] = Field(30, json_schema_extra={"example": 14})
 
 
 class TrainRequest(BaseModel):
@@ -90,8 +95,6 @@ def forecast(req: ForecastRequest, db: Session = Depends(get_db)):
     opt = optimize_price(_model, features, cost)
 
     _recent_X.append(features)
-    if len(_recent_X) > 1000:
-        _recent_X.pop(0)
 
     pred_row = Prediction(
         product_id=req.product_id,
@@ -189,8 +192,8 @@ def similar_products(req: SimilarRequest):
 @app.get("/metrics")
 def metrics():
     m = load_metrics()
-    if _recent_X:
-        recent_demands = [float(predict(_model, x.reshape(1, -1))[0]) for x in _recent_X[-100:]]
+    if _recent_X and _model is not None:
+        recent_demands = [float(predict(_model, x.reshape(1, -1))[0]) for x in list(_recent_X)[-100:]]
         health = prediction_health_check(recent_demands)
     else:
         health = {"status": "no_data"}
@@ -198,7 +201,10 @@ def metrics():
 
 
 @app.get("/predictions")
-def recent_predictions(limit: int = 20, db: Session = Depends(get_db)):
+def recent_predictions(
+    limit: int = Query(20, ge=1, le=200),
+    db: Session = Depends(get_db),
+):
     rows = db.query(Prediction).order_by(Prediction.created_at.desc()).limit(limit).all()
     return [
         {
@@ -211,3 +217,37 @@ def recent_predictions(limit: int = 20, db: Session = Depends(get_db)):
         }
         for r in rows
     ]
+
+
+@app.get("/categories")
+def list_categories():
+    return {
+        "categories": sorted(CATEGORY_MAP.keys()),
+        "count": len(CATEGORY_MAP),
+    }
+
+
+@app.get("/summary")
+def summary(db: Session = Depends(get_db)):
+    from sqlalchemy import func
+
+    total_predictions = db.query(func.count(Prediction.id)).scalar() or 0
+    avg_demand = db.query(func.avg(Prediction.predicted_demand)).scalar()
+    avg_price = db.query(func.avg(Prediction.optimized_price)).scalar()
+    total_trains = db.query(func.count(ModelMetrics.id)).scalar() or 0
+    latest_rmse = (
+        db.query(ModelMetrics.rmse)
+        .order_by(ModelMetrics.trained_at.desc())
+        .scalar()
+    )
+    drift_events = db.query(func.count(DriftLog.id)).filter(DriftLog.drift_detected == 1).scalar() or 0
+
+    return {
+        "total_predictions": total_predictions,
+        "avg_predicted_demand": round(float(avg_demand), 3) if avg_demand else None,
+        "avg_optimized_price": round(float(avg_price), 2) if avg_price else None,
+        "total_training_runs": total_trains,
+        "latest_rmse": round(float(latest_rmse), 4) if latest_rmse else None,
+        "drift_events_logged": drift_events,
+        "n_recent_in_memory": len(_recent_X),
+    }

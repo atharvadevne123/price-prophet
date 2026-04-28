@@ -95,3 +95,59 @@ def test_forecast_price_boundaries(client):
         })
         assert resp.status_code == 200
         assert resp.json()["predicted_demand"] >= 0
+
+
+def test_categories_endpoint(client):
+    resp = client.get("/categories")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "categories" in data
+    assert "count" in data
+    assert data["count"] > 0
+    assert "electronics" in data["categories"]
+    assert "clothing" in data["categories"]
+    assert sorted(data["categories"]) == data["categories"]
+
+
+def test_summary_endpoint(client):
+    resp = client.get("/summary")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "total_predictions" in data
+    assert "total_training_runs" in data
+    assert "drift_events_logged" in data
+    assert "n_recent_in_memory" in data
+    assert data["total_predictions"] >= 0
+
+
+def test_predictions_limit_validation(client):
+    resp = client.get("/predictions?limit=0")
+    assert resp.status_code == 422
+
+    resp = client.get("/predictions?limit=201")
+    assert resp.status_code == 422
+
+    resp = client.get("/predictions?limit=50")
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), list)
+
+
+def test_forecast_with_cost_field(client):
+    resp = client.post("/forecast", json={
+        "product_id": "COST-001",
+        "base_price": 100.0,
+        "cost": 40.0,
+        "category": "electronics",
+    })
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "expected_profit" in data
+    assert data["optimized_price"] > 0
+
+
+def test_train_sample_bounds(client):
+    resp = client.post("/train", json={"n_samples": 99})
+    assert resp.status_code == 422
+
+    resp = client.post("/train", json={"n_samples": 50001})
+    assert resp.status_code == 422

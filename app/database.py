@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import JSON, Column, DateTime, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -24,7 +24,7 @@ class Prediction(Base):
     optimized_price = Column(Float)
     confidence = Column(Float)
     features_used = Column(JSON)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class ModelMetrics(Base):
@@ -37,7 +37,7 @@ class ModelMetrics(Base):
     rmse = Column(Float)
     n_features = Column(Integer)
     n_samples = Column(Integer)
-    trained_at = Column(DateTime, default=datetime.utcnow)
+    trained_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class DriftLog(Base):
@@ -48,7 +48,7 @@ class DriftLog(Base):
     ks_statistic = Column(Float)
     p_value = Column(Float)
     drift_detected = Column(Integer)  # 0 or 1
-    logged_at = Column(DateTime, default=datetime.utcnow)
+    logged_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 def get_db():
