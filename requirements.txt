@@ -12,6 +12,6 @@ joblib==1.4.2
 faiss-cpu==1.9.0
 httpx==0.28.1
 python-dotenv==1.0.1
-matplotlib==3.9.3
+matplotlib==3.9.4
 pandas==2.2.3
 pytest-cov>=5.0.0
